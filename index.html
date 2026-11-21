@@ -1,0 +1,341 @@
+
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Біздің гүлдер әлемі 🌸</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 25px;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #e0f7ff, #fce4f3, #e5ffdf);
+    text-align: center;
+}
+
+h1 {
+    color: #8e4c91;
+    font-size: 30px;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 17px;
+    margin-bottom: 30px;
+}
+
+.students {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 22px;
+    max-width: 1150px;
+    margin: auto;
+}
+
+.card {
+    background: rgba(255,255,255,0.9);
+    border-radius: 22px;
+    padding: 15px;
+    box-shadow: 0 5px 15px #00000012;
+    border: 2px solid #ffffff;
+}
+
+.card h3 {
+    color: #765080;
+    font-size: 19px;
+    margin: 8px 0;
+}
+
+/* ӨСІМДІК ОРНЫ */
+.garden {
+    position: relative;
+    width: 150px;
+    height: 205px;
+    margin: 0 auto;
+}
+
+/* ӨСІМДІК */
+.student {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    width: 100px;
+    height: 175px;
+    transform: translateX(-50%);
+}
+
+/* САБАҚ */
+.stem {
+    position: absolute;
+    bottom: 0;
+    left: 47px;
+    width: 7px;
+    height: 0;
+    background: linear-gradient(to right, #218b3d, #6bd56a);
+    border-radius: 10px;
+    transition: height 2s ease;
+    z-index: 2;
+}
+
+/* ЖАПЫРАҚТАР */
+.leaf {
+    position: absolute;
+    width: 0;
+    height: 0;
+    background: #49b956;
+    border-radius: 100% 0 100% 0;
+    transition: all 1.2s ease;
+    z-index: 3;
+}
+
+.leaf.left {
+    left: 10px;
+    bottom: 70px;
+    transform: rotate(20deg);
+}
+
+.leaf.right {
+    right: 5px;
+    bottom: 90px;
+    transform: rotate(65deg) scaleX(-1);
+}
+
+/* ГҮЛ */
+.flower {
+    position: absolute;
+    bottom: 68px;
+    left: 50%;
+    width: 90px;
+    height: 90px;
+    transform: translateX(-50%) scale(0);
+    transform-origin: center bottom;
+    transition: transform 1.2s ease 1s;
+    z-index: 8;
+}
+
+/* КҮЛТЕЛЕР */
+.petal {
+    position: absolute;
+    left: 34px;
+    top: 0;
+    width: 23px;
+    height: 39px;
+    border-radius: 50%;
+    background: var(--petal);
+    transform-origin: 50% 45px;
+}
+
+/* ГҮЛДІҢ ОРТАСЫ */
+.center {
+    position: absolute;
+    left: 31px;
+    top: 30px;
+    width: 29px;
+    height: 29px;
+    background: #ffd33d;
+    border: 3px solid #e9a923;
+    border-radius: 50%;
+    z-index: 3;
+}
+
+/* ТОПЫРАҚ */
+.soil {
+    position: absolute;
+    bottom: 12px;
+    left: 10px;
+    width: 130px;
+    height: 20px;
+    background: #98613e;
+    border-radius: 50%;
+}
+
+/* ГҮЛ ӨСКЕН КЕЗДЕ */
+.student.grown .stem {
+    height: 100px;
+}
+
+.student.grown .leaf {
+    width: 36px;
+    height: 23px;
+}
+
+.student.grown .leaf.left {
+    bottom: 65px;
+}
+
+.student.grown .leaf.right {
+    bottom: 85px;
+}
+
+.student.grown .flower {
+    transform: translateX(-50%) scale(1);
+}
+
+/* БАТЫРМА */
+button {
+    border: none;
+    padding: 11px 20px;
+    border-radius: 25px;
+    background: #e58cba;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #c85b98;
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+.status {
+    color: #48a65b;
+    font-size: 13px;
+    font-weight: bold;
+    min-height: 18px;
+    margin: 8px 0;
+}
+
+.reset-all {
+    margin: 30px auto;
+    padding: 14px 28px;
+    background: #8b70c9;
+    font-size: 16px;
+}
+
+@media (max-width: 450px) {
+    body {
+        padding: 12px;
+    }
+
+    .students {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .card {
+        padding: 8px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<h1>🌸 Біздің гүлдер әлемі 🌸</h1>
+
+<p class="subtitle">
+Әр оқушы өз гүлін өсірсін! Өз есіміңді тауып, батырманы бас!
+</p>
+
+<div class="students" id="students"></div>
+
+<button class="reset-all" onclick="resetAll()">
+↻ Барлық гүлдерді қайта бастау
+</button>
+
+<script>
+const students = [
+    { name: "Ақниет", color: "#ff75a8" },
+    { name: "Ақнұр", color: "#ffb347" },
+    { name: "Айнұр", color: "#b58bea" },
+    { name: "Азида", color: "#ff6b6b" },
+    { name: "Нұрай", color: "#f6a6d0" },
+    { name: "Құралай", color: "#ffcc55" },
+    { name: "Жанель", color: "#8d9eff" },
+    { name: "Әлтаир", color: "#ff8c69" },
+    { name: "Гүльмира", color: "#dc83e8" },
+    { name: "Ботакөз", color: "#f18bba" },
+    { name: "Зарина", color: "#a1c96a" }
+];
+
+const studentsBox = document.getElementById("students");
+
+students.forEach((student, index) => {
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+        <h3>${student.name}</h3>
+
+        <div class="garden">
+            <div class="student" id="plant-${index}"
+                 style="--petal: ${student.color}">
+
+                <div class="stem"></div>
+
+                <div class="leaf left"></div>
+                <div class="leaf right"></div>
+
+                <div class="flower">
+                    <div class="petal" style="transform:rotate(0deg)"></div>
+                    <div class="petal" style="transform:rotate(45deg)"></div>
+                    <div class="petal" style="transform:rotate(90deg)"></div>
+                    <div class="petal" style="transform:rotate(135deg)"></div>
+                    <div class="petal" style="transform:rotate(180deg)"></div>
+                    <div class="petal" style="transform:rotate(225deg)"></div>
+                    <div class="petal" style="transform:rotate(270deg)"></div>
+                    <div class="petal" style="transform:rotate(315deg)"></div>
+                    <div class="center"></div>
+                </div>
+            </div>
+
+            <div class="soil"></div>
+        </div>
+
+        <div class="status" id="status-${index}">
+            🌱 Гүліңді өсір!
+        </div>
+
+        <button onclick="growFlower(${index})">
+            🌸 Менің гүлім
+        </button>
+    `;
+
+    studentsBox.appendChild(card);
+});
+
+// ӘР ОҚУШЫНЫҢ ГҮЛІН ЖЕКЕ ӨСІРУ
+function growFlower(index) {
+
+    const plant = document.getElementById("plant-" + index);
+    const status = document.getElementById("status-" + index);
+
+    if (plant.classList.contains("grown")) {
+        status.textContent = "🌷 Гүлің әдемі болып өсті!";
+        return;
+    }
+
+    plant.classList.add("grown");
+
+    status.textContent = "🌸 Жарайсың! Гүлің гүлдеді!";
+}
+
+// БАРЛЫҚ ГҮЛДІ ҚАЙТА БАСТАУ
+function resetAll() {
+
+    students.forEach((student, index) => {
+
+        const plant = document.getElementById("plant-" + index);
+        const status = document.getElementById("status-" + index);
+
+        plant.classList.remove("grown");
+        status.textContent = "🌱 Гүліңді өсір!";
+    });
+}
+</script>
+
+</body>
+</html>
